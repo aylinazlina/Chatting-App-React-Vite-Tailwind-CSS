@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root{
+  --primary_color:#11175D;
+  --secondary_color:#5F35F5;
+  --primary_text_color:#000000;
+  --secondary_text_color:#4D4D4D;
+  --different_color:#EA6C00;
+  --background_color:#FFFFFF;
+  --heading_font: "Nunito", serif;
+
+}
+
+
+@theme{
+  --color-primary_color:var(--primary_color);
+  --color-secondary_color:var(--secondary_color);
+  --color-primary_text_color:var(--primary_text_color);
+  --color-secondary_text_color:var(--secondary_text_color);
+  --color-different_color:var(--different_color);
+  --color-background_color:var(--background_color);
+  --font-heading_font:var(--heading_font);
+}
+
+
+.container{
+  max-width:1170px;
+  scroll-behavior: smooth;
+}
+@layer base{
+  *{
+    margin:0;
+    padding:0;
+    outline:0;
+    box-sizing:border-box;
+  }
+
+
+  a{
+    text-decoration:none;
+    
+  }
+  li,ul,ol{
+    list-style:none;
+  }
+
+  img{
+    vertical-align: middle;
+  }
+
+  /*  ================== Registration ================= */
+  
+.inputContainer {
+  position: relative;
+}
+
+.inputField {
+  max-width: 368px;
+  padding: 26px 50px;
+  border: 1.72px solid #b8b9ce;
+  border-radius: 8.6px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  font-family: "Nunito", serif;
+  font-size: 20.64px;
+  font-weight: 600;
+  color: #11175D;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: white;
+  background-clip: padding-box;
+}
+
+.login{
+  max-width: 368px;
+  padding: 26px 50px;
+  border-bottom: 1px solid #03014C;
+  font-family: "Nunito", serif;
+  font-size: 20.64px;
+  font-weight: 600;
+  color: #11175D;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: white;
+  background-clip: padding-box;
+}
+
+.login:focus{
+  border-bottom: 2px solid #5F35F5;
+}
+
+.inputField:focus {
+  border: 1.72px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(90deg, #020024 0%, #8327ba 0%, #00fffe 95%) border-box;
+}
+
+.inputLabel {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  padding: 0 5px;
+  font-family: "Nunito", serif;
+  font-size: 18px;
+  color: #888;
+  transition: all 0.3s ease-in-out;
+}
+
+.inputContainer .inputField:focus+.inputLabel,
+.inputContainer .inputField:valid +.inputLabel {
+  top: 0;
+  left: 30px;
+  font-size: 14px;
+  color: #555;
+  padding: 0 16px;
+}
+
+.login:focus+.inputLabel,
+.login:valid+.inputLabel{
+  display: none;
+}
+
+.eyeToggle{
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+  /*  ================== Registration ================= */
+  
+  
+
+}
+
+
