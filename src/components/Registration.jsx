@@ -6,6 +6,15 @@ import chatAnimation from "../assets/lottieAnimation.json";
 import { inputSourceData } from "../lib/InputSource";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
+import { toast, Bounce } from "react-toastify";
+import { HashLoader } from "react-spinners";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 
 import Button from "../components/common_component/Button";
 
@@ -13,17 +22,23 @@ const Registration = () => {
   const item = inputSourceData();
   console.log(item);
 
+  const auth = getAuth();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPass] = useState("");
+
   const [eye, setEye] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [usernameError, setusernameError] = useState("");
   const [emailError, setemailError] = useState("");
   const [passwordError, setpasswordError] = useState("");
 
   console.log("username", username);
+
+  console.log(username, password, email); //info in console
 
   /**
    * todo:handleEye
@@ -69,11 +84,71 @@ const Registration = () => {
     } else if (!password) {
       setpasswordError("passoword is missing !");
     } else {
-      alert("everything is fine!");
+      setLoading(true);
+
+      // alert("everything is fine");
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userinfo) => {
+          console.log("user created successfully", userinfo);
+          updateProfile(auth.currentUser, {
+            displayName: username || "Jane Q. User",
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          });
+        })
+        .then(() => {
+          toast.success(`🚀 ${username},Your Account Created Successfully !`, {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        })
+        .then(() => {
+          return sendEmailVerification(auth.currentUser);
+        })
+        .then((mailInfo) => {
+          console.log("mail send !", mailInfo);
+
+          toast.info("🦄 verification mail send to your email !", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+         
+        })
+        .catch((err) => {
+          console.log(
+            `error from createUserWithEmailAndPassword function  ${err.code} `
+          );
+        })
+        .finally(() => {
+
+          setLoading(false);
+          console.log("ok");
+          setUsername("");
+          setEmail("");
+          setPassword("");
+        });
     }
   };
 
-  console.log(usernameError, emailError, passwordError);//showing the error in console
+  // console.log(auth.currentUser.emailVerified)
+  console.log(usernameError, emailError, passwordError); //showing the error in console
+
+  //  console.log(auth.currentUser) //recent je signup korse tar info
+  //  console.log(auth.currentUser.displayName)//recent je signup korse tar specific info
 
   return (
     <div className="flex py-20">
@@ -95,23 +170,28 @@ const Registration = () => {
                     type={eye ? "text" : "password"}
                     className="py-2 px-4 border border-gray-400 rounded-xl mb-2 "
                     name={item.name}
+                  
                     placeholder={`Enter your ${item.name}`}
                     onChange={handleInput}
+                    value={password}
                   />
-                  {item.name == "password" && password == "" ? (<span className="text-red-600 font-roboto_font">
+                  {item.name == "password" && password == "" ? (
+                    <span className="text-red-600 font-roboto_font">
                       {!password && passwordError}
-                    </span>) : " "}
+                    </span>
+                  ) : (
+                    " "
+                  )}
 
                   <span
                     className="absolute right-0 top-11 translate-y-[50%] cursor-pointer"
                     onClick={handleEye} //this onClick will triger eye icon in the website
                   >
                     {eye ? <IoIosEye /> : <IoIosEyeOff />}
-                    
                   </span>
                 </div>
               ) : (
-                <div className="flex flex-col gap-2">
+                (item.name == "username" ? (<div className="flex flex-col gap-2">
                   <label className=" text-black font_roboto_font font-bold text-[21px] mt-1">
                     Your {item.name} <span className="text-red-600">*</span>
                   </label>
@@ -128,25 +208,72 @@ const Registration = () => {
                     name={item.name}
                     placeholder={`Enter your ${item.name}`}
                     onChange={handleInput}
-                  />
-                  {item.name === "email"  && email == "" ? (
+                    value ={username}
+                    
+                  /> 
+                  {item.name === "email" && email == "" ? (
                     <span className="text-red-600 font-roboto_font">
                       {!email && emailError}
                     </span>
-                  ): item.name === "username" && username == "" ? (
+                  ) : item.name === "username" && username == "" ? (
                     <span className="text-red-600 font-roboto_font">
                       {!username && usernameError}
                     </span>
-                  ): ""}
-                </div>
+                  ) : (
+                    ""
+                  )}
+                </div>) : (<div className="flex flex-col gap-2">
+                  <label className=" text-black font_roboto_font font-bold text-[21px] mt-1">
+                    Your {item.name} <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type={
+                      item.name.toLocaleLowerCase() ==
+                      "email".toLocaleLowerCase()
+                        ? "email"
+                        : item.name == "username"
+                        ? "text"
+                        : "password"
+                    }
+                    className="py-2 px-4 border border-gray-400 rounded-xl mb-2"
+                    name={item.name}
+                    placeholder={`Enter your ${item.name}`}
+                    onChange={handleInput}
+                    value={email}
+                    
+                  /> 
+                  {item.name === "email" && email == "" ? (
+                    <span className="text-red-600 font-roboto_font">
+                      {!email && emailError}
+                    </span>
+                  ) : item.name === "username" && username == "" ? (
+                    <span className="text-red-600 font-roboto_font">
+                      {!username && usernameError}
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>) )
               )
             )}
+            {loading ? (
+              <Button
+                design="px-22 py-2 bg-secondary_color text-background_color font-roboto_font rounded capitalize mt-4 cursor-pointer text-lg"
+                 
+                content={<HashLoader
+                  color="#ffffff"
+                  size={25}
+                  speedMultiplier={2}
+                />}
+              />
+            ) : (
+              <Button
+                design="px-22 py-2 bg-secondary_color text-background_color font-roboto_font rounded capitalize mt-4 cursor-pointer text-lg"
+                onClick={handleSignUp} //this onclick is similar to addeventlistener
+                content="sign up"
+              />
+            )}
 
-            <Button
-              design="px-22 py-2 bg-secondary_color text-background_color font-roboto_font rounded capitalize mt-4 cursor-pointer text-lg"
-              onClick={handleSignUp} //this onclick is similar to addeventlistener 
-              content="sign up"
-            />
             <p className="font-medium text-[16.4px] mt-4">
               Already have an account ?{" "}
               <span className="text-different_color">Sign In</span>{" "}
