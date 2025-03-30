@@ -2,12 +2,13 @@ import React from "react";
 import { useState } from "react";
 import Lottie from "lottie-react";
 import Heading from "../components/common_component/Heading";
-import chatAnimation from "../assets/lottieAnimation.json";
+import chatAnimation from "../assets/SignUpLottieAnimation.json";
 import { inputSourceData } from "../lib/InputSource";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
 import { toast, Bounce } from "react-toastify";
 import { HashLoader } from "react-spinners";
+import {Link} from 'react-router'
 
 import {
   getAuth,
@@ -275,8 +276,8 @@ const Registration = () => {
             )}
 
             <p className="font-medium text-[16.4px] mt-4">
-              Already have an account ?{" "}
-              <span className="text-different_color">Sign In</span>{" "}
+              Already have an account ? 
+              <Link to={'/signin'} className="text-different_color hover:text-blue-600 ml-1 hover:underline"> Sign In</Link>{" "}
             </p>
           </form>
         </div>

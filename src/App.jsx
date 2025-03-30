@@ -1,11 +1,19 @@
 import React from 'react'
-import Registration from './components/Registration'
+import Registration from './pages/Registration'
+import SignIn from './pages/SignIn'
+import { BrowserRouter, Routes, Route } from "react-router";
 
 const App = () => {
   return (
-    <div>
-      <Registration></Registration>
-    </div>
+  <BrowserRouter>
+  
+  
+  <Routes>
+    <Route path='/signup' element={<Registration/>}></Route>
+    <Route path='/signin' element={<SignIn/>}></Route>
+  </Routes>
+  
+  </BrowserRouter>
   )
 }
 
