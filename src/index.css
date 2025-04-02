@@ -49,10 +49,46 @@
   img{
     vertical-align: middle;
   }
+/* ================ home page nav-link active */
 
-  /*  ================== Registration ================= */
+.active{
+
+  width:180%;
+  background-color: white;
+  padding: 10px 0px;
  
-  /*  ================== Registration ================= */
+  position:relative;
+ 
+  
+
+}
+.active::before{
+  position:absolute;
+  content: "";
+  width: 40%;
+  height:100%;
+  background-color:white;
+  top: 0;
+  left: -40%;
+  
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+}
+
+.active::after{
+  position:absolute;
+  content: "";
+  width: 10%;
+  height:100%;
+  background-color:var(--secondary_color);
+  top: 0;
+  right:-2%;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+}
+
   
   
 

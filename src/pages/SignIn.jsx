@@ -130,7 +130,7 @@ const loginWithGoogle=()=>{
 
           </div>
 
-        <label className="font-roboto_font">Enter your email address</label>
+        <label className="font-roboto_font text-[20px] mt-4">Enter email address</label>
         <input
           type="email"
           id="email"
@@ -144,7 +144,7 @@ const loginWithGoogle=()=>{
             {""}
           </span>
         )}
-        <label className="font-roboto_font mt-4 ">Enter your password</label>
+        <label className="font-roboto_font mt-4 text-[20px]">Enter your password</label>
         <input
           type="password"
           id="password"
