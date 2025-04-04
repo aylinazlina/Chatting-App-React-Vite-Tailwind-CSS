@@ -1,11 +1,30 @@
 import React from "react";
-import SideNavbar from "../components/home_components/SideNavbar";
+import Searchbar from "../components/home_components/Searchbar";
+import GroupList from "../components/home_components/GroupList";
+import FriendRequest from "../components/home_components/FriendRequest";
+import Friends from "../components/home_components/Friends";
+import Group from "../components/home_components/Group";
+import UserList from "../components/home_components/UserList";
+import BlockedUsers from "../components/home_components/BlockedUsers";
 const Home = () => {
   return (
-    <div>
-      <div className="flex justify-between flex-wrap">
-        <SideNavbar />
-        <div className="w-[86%] h-[92vh]  mt-7 mb-7 mr-6 bg-amber-300 rounded-xl"> right</div>
+    <div className="flex justify-around">
+      <div className="">
+      
+        <Searchbar />
+        <GroupList />
+        <FriendRequest />
+      </div>
+
+      <div className="flex flex-col">
+    
+        <Friends />
+        <Group />
+      </div>
+
+      <div className="flex flex-col">
+      <UserList />
+      <BlockedUsers />
       </div>
     </div>
   );

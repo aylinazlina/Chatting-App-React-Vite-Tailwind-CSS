@@ -5,24 +5,28 @@ import { BiMessageRoundedDots } from "react-icons/bi";
 import { TbBell } from "react-icons/tb";
 import { GoGear } from "react-icons/go";
 import { FiLogOut } from "react-icons/fi";
-import {Link} from 'react-router'
+import { Link,useLocation,useNavigate} from "react-router";
 const Home_Components = () => {
   const navigationIcon = [
     {
       id: 1,
+      path: "/home",
       icon: <IoHomeOutline />,
     },
 
     {
       id: 2,
+      path: "/message",
       icon: <BiMessageRoundedDots />,
     },
     {
       id: 3,
+      path: "/notification",
       icon: <TbBell />,
     },
     {
       id: 4,
+      path: "/settings",
       icon: <GoGear />,
     },
 
@@ -32,9 +36,19 @@ const Home_Components = () => {
     },
   ];
 
+const navigate=useNavigate("");
+const location=useLocation("");
+
+// console.log(location)
+//console.log(location.pathname)
+
+  // todo:sideItem function
+  const handleSideItem = (path ="/") => {
+    navigate(path)
+  };
   return (
     <div>
-      <div className="w-[130px] h-[92vh] bg-secondary_color mt-7 mb-7 ml-7 rounded-2xl">
+      <div className="w-[130px] h-[92dvh] bg-secondary_color mt-7 mb-7 ml-7 rounded-2xl">
         <div className="flex flex-col justify-center items-center ">
           <div className="w-[80px] h-[80px] mt-7 mb-10 rounded-[50%] cursor-pointer relative group">
             <picture>
@@ -51,22 +65,29 @@ const Home_Components = () => {
 
           {/* =========navigation icons ======== */}
           <div className="flex flex-col gap-y-12">
-            {navigationIcon?.map((item,index) => (
-
-              navigationIcon.length -1 == index ? (
-                <Link className="text-white text-[40px] active mt-13" key={item.id}>
-                 {item.icon}
-                </Link>
-              ):(
-                <div className="flex flex-col gap-y-12">
-                <Link className="text-white text-[40px]">
-                 {item.icon}
-                </Link>
+            {navigationIcon?.map((item, index) =>
+              navigationIcon.length - 1 == index ? (
+                <Link
+                to={item.path}
+                className="text-white text-[40px] mt-13 cursor-pointer"
+                key={item.id}
+              >
+                <div className="" onClick={handleSideItem } >{item.icon}</div>
+              </Link>
+              ) : (
+                <div
+                  className="flex flex-col gap-y-12 "
+                >
+                  <Link
+                    to={item.path}
+                    className="text-white text-[40px]"
+                    key={item.id}
+                  >
+                    <div className={item.path === location.pathname ? (`cursor-pointer text-secondary_color active `):( `cursor-pointer`)} onClick={handleSideItem} >{item.icon}</div>
+                  </Link>
                 </div>
               )
-              
-            ))}
-            
+            )}
           </div>
 
           {/* =========navigation icons ======== */}
