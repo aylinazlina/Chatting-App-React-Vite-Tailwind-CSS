@@ -1,7 +1,7 @@
 import React from "react";
 import { HiDotsVertical } from "react-icons/hi";
-import Button from "../common_component/Button";
-const FriendRequest = () => {
+
+const Friends = () => {
   const groups = [
     {
       id: 1,
@@ -86,26 +86,26 @@ const FriendRequest = () => {
   ];
   return (
     <div>
-      <div className="w-[30dvw] h-[43dvh] mt-9 rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
+      <div className="w-[30dvw] h-[45dvh] mt-5 rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
         <div className="flex  py-2">
-          <p className="ml-6 font-roboto_font font-bold text-[18px]">
-            Friend Request({groups.length})
+          <p className="ml-6 mt-2 font-roboto_font font-bold text-[18px]">
+            Friends({groups.length})
           </p>
-          <span className="font-roboto_font font-bold text-[22px] mt-2 text-secondary_color ml-58">
+          <span className="font-roboto_font font-bold text-[22px] mt-4 text-secondary_color ml-75">
             <HiDotsVertical />
           </span>
         </div>
 
 
-      
+    
         {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
-        <div className="w-full h-[90%] scrollable-content">
+        <div className="w-full h-full scrollable-content">
           {/* groups */}
           {groups?.map((item) => (
             <div
               className={
                 item.id === groups.length
-                  ? `flex justify-around  pb-8 mt-2 cursor-pointer`
+                  ? `flex justify-around  pb-17 mt-2 cursor-pointer`
                   : `flex justify-around border-b-2 border-gray-300 pb-2 mt-2 cursor-pointer`
               }
               key={item.id}
@@ -123,14 +123,13 @@ const FriendRequest = () => {
                 <p className="font-roboto_font mr-7 font-semibold">
                   {item.name}
                 </p>
-                <p className="font-roboto_font  font-normal text-[13px] text-gray-400">
+                <p className="font-roboto_font  font-medium text-[13px] text-gray-400">
                   {item.text}
                 </p>
               </div>
-              <Button
-                design="px-4  py-1 bg-secondary_color text-white font-bold font-roboto_font rounded-md cursor-pointer"
-                content={"Accept"}
-              />
+              <p className="font-roboto_font  font-medium text-[13px] text-gray-400">
+                {item.time}
+              </p>
             </div>
           ))}
 
@@ -141,4 +140,4 @@ const FriendRequest = () => {
   );
 };
 
-export default FriendRequest;
+export default Friends;

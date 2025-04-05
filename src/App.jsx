@@ -5,7 +5,7 @@ import Landing from "./pages/Landing";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Home from "./pages/Home";
 import RootLayout from "./rootlayout/RootLayout";
-
+import Chat from './pages/Chat';
 const App = () => {
   return (
     <BrowserRouter>
@@ -15,7 +15,7 @@ const App = () => {
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/" element={<RootLayout />}>
           <Route path="/home" element={<Home />}></Route>
-          <Route path="/message" element={"This is from message page"}></Route>
+          <Route path="/message" element={<Chat/>}></Route>
           <Route path="/notification" element ={"This is from notification page"}></Route>
           <Route path="/settings" element={"This is from settings page"}></Route>
         </Route>

@@ -116,7 +116,7 @@ const GroupList = () => {
                 <p className="font-roboto_font mr-28 font-semibold">
                   {item.name}
                 </p>
-                <p className="font-roboto_font  font-normal text-[13px] text-gray-300">
+                <p className="font-roboto_font  font-normal text-[13px] text-gray-400">
                   {item.text}
                 </p>
               </div>

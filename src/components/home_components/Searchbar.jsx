@@ -1,21 +1,33 @@
-import React from 'react'
+import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 const Searchbar = () => {
   return (
     <div>
-      <form>
-      <div className='w-[30dvw] h-[5dvh] bg-white border-b-2 border-l-2 border-r-2 border-gray-200 shadow-2xl rounded-lg'>
-
-<div className='flex'>
-<span className=' ml-6 mr-6 mt-2 font-roboto_font font-bold'><FaSearch /></span>
-   <p className='font-roboto_font font-normal text-[18px] text-gray-300'>Search</p>
-   <span className='ml-72 font-roboto_font font-bold text-[22px] mt-2 text-secondary_color'><HiDotsVertical /></span>
-</div>
- </div>
+      <form class="flex items-center max-w-lg mx-auto">
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <span className="font-roboto_font font-bold text-gray-500">
+              <FaSearch />
+            </span>
+            <p className="font-roboto_font font-bold text-[16px] ml-5 text-gray-400">Search</p>
+          </div>
+          <input
+            type="text"
+            className="w-[30dvw] h-[5dvh] bg-white border-b-2 border-l-2 border-r-2 border-t-2 border-gray-200 shadow-2xl rounded-lg"
+          />
+          <div
+           
+            class="absolute inset-y-0 end-0 flex items-center pe-3"
+          >
+            <span className="absolute inset-y-0 end-0 flex items-center pe-3 font-roboto_font font-bold text-[22px]  text-secondary_color cursor-pointer">
+              <HiDotsVertical />
+            </span>
+          </div>
+        </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Searchbar
+export default Searchbar;
