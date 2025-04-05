@@ -88,7 +88,11 @@ const GroupList = () => {
           </span>
         </div>
 
-        <div className="w-full h-[90%] overflow-y-auto">
+
+        {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
+        <div className="w-full h-[90%] scrollable-content">
+
+            
           {/* groups */}
           {groups?.map((item) => (
             <div

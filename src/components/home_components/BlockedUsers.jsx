@@ -98,7 +98,9 @@ const BlockedUsers = () => {
           </span>
         </div>
 
-        <div className='w-full h-full overflow-auto'>
+      
+        {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
+        <div className='w-full h-full scrollable-content'>
           {/* groups */}
         {groups?.map((item) => (
           <div
@@ -121,7 +123,7 @@ const BlockedUsers = () => {
             <div>
               <p className="font-roboto_font font-semibold">{item.name}</p>
               <p className="font-roboto_font  font-normal text-[13px] text-gray-300">
-                {item.text}
+                {item.time}
               </p>
             </div>
             <Button

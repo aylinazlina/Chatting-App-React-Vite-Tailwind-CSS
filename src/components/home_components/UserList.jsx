@@ -1,6 +1,7 @@
 import React from "react";
 import { HiDotsVertical } from "react-icons/hi";
-import Button from "../common_component/Button"
+import Button from "../common_component/Button";
+import { FaPlus } from "react-icons/fa6";
 const UserList = () => {
     const groups = [
         {
@@ -89,15 +90,18 @@ const UserList = () => {
     <div>
       <div className=" w-[25dvw] h-[43dvh] rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
         <div className="flex  py-2">
-          <p className="ml-6 mt-12 font-roboto_font font-bold text-[18px]">
+          <p className="ml-6 mt-4 font-roboto_font font-bold text-[18px]">
             User List({groups.length})
           </p>
-          <span className="font-roboto_font font-bold text-[22px] mt-12 text-secondary_color ml-50">
+          <span className="font-roboto_font font-bold text-[22px] mt-4 text-secondary_color ml-50">
             <HiDotsVertical />
           </span>
         </div>
 
-        <div className="w-full h-full overflow-auto">
+
+      
+        {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
+        <div className="w-full h-full scrollable-content">
           {/* groups */}
         {groups?.map((item) => (
           <div
@@ -120,12 +124,12 @@ const UserList = () => {
             <div>
               <p className="font-roboto_font mr-7 font-semibold">{item.name}</p>
               <p className="font-roboto_font  font-normal text-[13px] text-gray-300">
-                {item.text}
+                {item.time}
               </p>
             </div>
             <Button
-              design="px-4  py-1 bg-secondary_color text-white font-bold font-roboto_font rounded-md cursor-pointer"
-              content={"+"}
+              design="px-4  py-1 bg-secondary_color text-white font-bold text-[22px] font-roboto_font rounded-md cursor-pointer"
+              content={<FaPlus />}
             />
           </div>
         ))}

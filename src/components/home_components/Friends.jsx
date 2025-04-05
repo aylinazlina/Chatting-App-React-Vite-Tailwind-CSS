@@ -96,7 +96,10 @@ const Friends = () => {
           </span>
         </div>
 
-        <div className="w-full h-full overflow-auto">
+
+    
+        {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
+        <div className="w-full h-full scrollable-content">
           {/* groups */}
           {groups?.map((item) => (
             <div

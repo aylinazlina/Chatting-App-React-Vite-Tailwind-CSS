@@ -96,7 +96,10 @@ const FriendRequest = () => {
           </span>
         </div>
 
-        <div className="w-full h-[90%] overflow-auto">
+
+      
+        {/* srcollable-content classname go to index.css or otherwise use overflow-auto */}
+        <div className="w-full h-[90%] scrollable-content">
           {/* groups */}
           {groups?.map((item) => (
             <div
