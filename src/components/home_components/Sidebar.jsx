@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { IoHomeOutline } from "react-icons/io5";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import { TbBell } from "react-icons/tb";
 import { GoGear } from "react-icons/go";
 import { FiLogOut } from "react-icons/fi";
-import { Link,useLocation,useNavigate} from "react-router";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 const Home_Components = () => {
   const navigationIcon = [
     {
@@ -36,8 +37,8 @@ const Home_Components = () => {
     },
   ];
 
-const navigate=useNavigate("");
-const location=useLocation("");
+const navigate=useNavigate();
+const location=useLocation();
 
 // console.log(location)
 //console.log(location.pathname)
@@ -46,6 +47,72 @@ const location=useLocation("");
   const handleSideItem = (path ="/") => {
     navigate(path)
   };
+
+  /**
+   * todo:handleUploadIcon function
+   * 
+   */
+
+ 
+
+  // useEffect()
+ const [count,setCount]=useState(0);
+
+const handleIncreament=()=>{
+
+  //setCount(count+1) or 
+
+  setCount((prev)=>{
+      return prev +1;
+  })
+ }
+
+ useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://upload-widget.cloudinary.com/latest/global/all.js";
+  script.async = true;
+  script.onload = () => {
+    console.log("Cloudinary script loaded");
+  };
+  document.body.appendChild(script);
+}, []);
+
+const handleUploadIcon = () => {
+  if (window.cloudinary) {
+    window.cloudinary.openUploadWidget(
+      {
+        cloudName: "dfh0f2pmu",
+        uploadPreset: "chatting_app",
+        sources: [
+          "local",
+          "url",
+          "camera",
+          "dropbox",
+          "gettyimages",
+          "unsplash",
+          "google_drive",
+          "image_search",
+        ],
+        googleApiKey: "AIzaSyBEs8X_6kR9W6wi__K3E9MA6Y0v4CGbS9Y", // ← use googleApiKey, not `Key`
+        searchBySites: ["all", "cloudinary.com"],
+        searchByRights: true,
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Upload Error:", error);
+          return;
+        }
+        console.log("Upload Result:", result);
+      }
+    );
+  } else {
+    alert("Upload widget not ready yet. Please wait...");
+  }
+};
+
+
+ console.log(window.cloudinary)
+
   return (
     <div>
       <div className="w-[130px] h-[92dvh] bg-secondary_color mt-7 mb-7 ml-7 rounded-2xl">
@@ -58,9 +125,15 @@ const location=useLocation("");
                 className="object-cover w-full h-full rounded-full"
               />
             </picture>
-            <span className="hidden group-hover:block text-white font-bold text-[32px] absolute translate-1/2 top-[7%] left-[13%]">
+            <span className="hidden group-hover:block text-white font-bold text-[32px] absolute translate-1/2 top-[7%] left-[13%]" onClick={handleUploadIcon}>
               <IoCloudUploadOutline />
             </span>
+
+
+            {/* <span>{count}</span>
+            <button onClick={handleIncreament} className="bg-red-400">+</button> */}
+
+
           </div>
 
           {/* =========navigation icons ======== */}
