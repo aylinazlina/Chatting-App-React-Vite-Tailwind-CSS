@@ -8,9 +8,16 @@ import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
+import { getDatabase, ref, onValue } from "firebase/database";
+
 import { getAuth, signOut } from "firebase/auth";
 
 const Home_Components = () => {
+
+  const auth = getAuth();
+  const db = getDatabase();
+
+
   const navigationIcon = [
     {
       id: 1,
@@ -40,108 +47,123 @@ const Home_Components = () => {
     },
   ];
 
-const navigate=useNavigate();
-const location=useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-// console.log(location)
-//console.log(location.pathname)
+
+
+  // console.log(location)
+  //console.log(location.pathname)
 
   // todo:sideItem function
-  const handleSideItem = (path ="/") => {
-    navigate(path)
+  const handleSideItem = (path = "/") => {
+    navigate(path);
   };
 
   /**
    * todo:handleUploadIcon function
-   * 
+   *
    */
 
- 
-
   // useEffect()
- const [count,setCount]=useState(0);
+  const [count, setCount] = useState(0);
 
-const handleIncreament=()=>{
+  const handleIncreament = () => {
+    //setCount(count+1) or
 
-  //setCount(count+1) or 
-
-  setCount((prev)=>{
-      return prev +1;
-  })
- }
-
- useEffect(() => {
-  const script = document.createElement("script");
-  script.src = "https://upload-widget.cloudinary.com/latest/global/all.js";
-  script.async = true;
-  script.onload = () => {
-    console.log("Cloudinary script loaded");
+    setCount((prev) => {
+      return prev + 1;
+    });
   };
-  document.body.appendChild(script);
-}, []);
 
-const handleUploadIcon = () => {
-  if (window.cloudinary) {
-    window.cloudinary.openUploadWidget(
-      {
-        cloudName: "dfh0f2pmu",
-        uploadPreset: "chatting_app",
-        sources: [
-          "local",
-          "url",
-          "camera",
-          "dropbox",
-          "gettyimages",
-          "unsplash",
-          "google_drive",
-          "image_search",
-        ],
-        googleApiKey: "AIzaSyBEs8X_6kR9W6wi__K3E9MA6Y0v4CGbS9Y", // ← use googleApiKey, not `Key`
-        searchBySites: ["all", "cloudinary.com"],
-        searchByRights: true,
-      },
-      (error, result) => {
-        if (error) {
-          console.error("Upload Error:", error);
-          return;
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://upload-widget.cloudinary.com/latest/global/all.js";
+    script.async = true;
+    script.onload = () => {
+      console.log("Cloudinary script loaded");
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  const handleUploadIcon = () => {
+    if (window.cloudinary) {
+      window.cloudinary.openUploadWidget(
+        {
+          cloudName: "dfh0f2pmu",
+          uploadPreset: "chatting_app",
+          sources: [
+            "local",
+            "url",
+            "camera",
+            "dropbox",
+            "gettyimages",
+            "unsplash",
+            "google_drive",
+            "image_search",
+          ],
+          googleApiKey: "AIzaSyBEs8X_6kR9W6wi__K3E9MA6Y0v4CGbS9Y", // ← use googleApiKey, not `Key`
+          searchBySites: ["all", "cloudinary.com"],
+          searchByRights: true,
+        },
+        (error, result) => {
+          if (error) {
+            console.error("Upload Error:", error);
+            return;
+          }
+          console.log("Upload Result:", result);
         }
-        console.log("Upload Result:", result);
-      }
-    );
-  } else {
-    alert("Upload widget not ready yet. Please wait...");
-  }
-};
+      );
+    } else {
+      alert("Upload widget not ready yet. Please wait...");
+    }
+  };
 
+  console.log(window.cloudinary);
 
- console.log(window.cloudinary)
+  //todo: handlelogOut function
 
+  const handlelogOut = () => {
+    //alert("hi!")
 
- //todo: handlelogOut function
+    const auth = getAuth();
 
-const handlelogOut=()=>{
-   //alert("hi!")
+    signOut(auth)
+      .then((result) => {
+        console.log("Result: ", result);
 
-   const auth = getAuth();
+        navigate("/signin");
+      })
+      .catch((error) => {
+        console.log(`Error from sign out function :${error}`);
+      });
+  };
 
-   signOut(auth).then((result)=>{
+  //  console.log(auth.currentUser)
 
-    console.log("Result: ",result);
+  //fetch the userdata from user database
 
-    navigate('/signin');
+  const [userdata, setuserdata] = useState(null);
 
+  useEffect(() => {
+    const auth = getAuth();
+    const fetchData = () => {
+      const UserRef = ref(db, "users/");
+      onValue(UserRef, (snapshot) => {
+        let userblankinfo = null; // changed from const to let
+        snapshot.forEach((item) => {
+          if (item.val().userUid === auth.currentUser.uid) {
+            userblankinfo = { ...item.val(), userKey: item.key };
+          }
+        });
+        setuserdata(userblankinfo);
+      });
+    };
+    fetchData();
+  }, []);
 
-   }).catch((error)=>{
-
-    console.log(`Error from sign out function :${error}`)
-
-   })
-
- }
-
-//  console.log(auth.currentUser)
-
-
+  console.log("====================")
+  console.log(userdata)
 
   return (
     <div>
@@ -150,20 +172,22 @@ const handlelogOut=()=>{
           <div className="w-[80px] h-[80px] mt-7 mb-10 rounded-[50%] cursor-pointer relative group">
             <picture>
               <img
-                src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                src={userdata ? userdata.profile_picture :"https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
                 alt="image"
                 className="object-cover w-full h-full rounded-full"
               />
             </picture>
-            <span className="hidden group-hover:block text-white font-bold text-[32px] absolute translate-1/2 top-[7%] left-[13%]" onClick={handleUploadIcon}>
+            <span
+              className="hidden group-hover:block text-white font-bold text-[32px] absolute translate-1/2 top-[7%] left-[13%]"
+              onClick={handleUploadIcon}
+            >
               <IoCloudUploadOutline />
             </span>
 
+            <p className="font-roboto_font text-white text-[18px] ml-3">{userdata? userdata.username:"missing"}</p>
 
             {/* <span>{count}</span>
             <button onClick={handleIncreament} className="bg-red-400">+</button> */}
-
-
           </div>
 
           {/* =========navigation icons ======== */}
@@ -171,22 +195,31 @@ const handlelogOut=()=>{
             {navigationIcon?.map((item, index) =>
               navigationIcon.length - 1 == index ? (
                 <div
-                onClick={handlelogOut}
-                className="text-white text-[40px] mt-13 cursor-pointer"
-                key={item.id}
-              >
-                <div className="" onClick={handleSideItem } >{item.icon}</div>
-              </div>
-              ) : (
-                <div
-                  className="flex flex-col gap-y-12 "
+                  onClick={handlelogOut}
+                  className="text-white text-[40px] mt-13 cursor-pointer"
+                  key={item.id}
                 >
+                  <div className="" onClick={handleSideItem}>
+                    {item.icon}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-y-12 ">
                   <Link
                     to={item.path}
                     className="text-white text-[40px]"
                     key={item.id}
                   >
-                    <div className={item.path === location.pathname ? (`cursor-pointer text-secondary_color active `):( `cursor-pointer`)} onClick={handleSideItem} >{item.icon}</div>
+                    <div
+                      className={
+                        item.path === location.pathname
+                          ? `cursor-pointer text-secondary_color active `
+                          : `cursor-pointer`
+                      }
+                      onClick={handleSideItem}
+                    >
+                      {item.icon}
+                    </div>
                   </Link>
                 </div>
               )

@@ -25,6 +25,8 @@ const ValidationError = () => {
             <button className="mb-4 mt-5 py-2 px-4 rounded text-lg font-bold font-roboto_font text-white bg-red-500  cursor-pointer" onClick={handleGoToEmail}>
               Go to Email
             </button>
+
+            <p className="font-roboto_font text-[22px]">Once you've verified your email, this page will update automatically.</p>
           
           </div>
         </div>
