@@ -9,7 +9,8 @@ import { IoIosEyeOff } from "react-icons/io";
 import { toast, Bounce } from "react-toastify";
 import { HashLoader } from "react-spinners";
 import {Link} from 'react-router'
-
+import { getDatabase,push, ref, set } from "firebase/database";
+import { useNavigate } from "react-router";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -20,6 +21,10 @@ import {
 import Button from "../components/common_component/Button";
 
 const Registration = () => {
+
+  const db = getDatabase();
+  const Navigate=useNavigate();
+
   const item = inputSourceData();
   console.log(item);
 
@@ -111,6 +116,17 @@ const Registration = () => {
         })
         .then(() => {
           return sendEmailVerification(auth.currentUser);
+          
+
+        }).then(()=>{
+
+         let userRef =push(ref(db, 'users/'))
+          set(userRef, {
+            username: auth.currentUser.displayName || username,
+            email: auth.currentUser.email || email,
+            profile_picture : `https://images.pexels.com/photos/31418360/pexels-photo-31418360/free-photo-of-serene-view-of-mount-fuji-with-cherry-blossoms.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`,
+            userUid:auth.currentUser.uid
+          })
         })
         .then((mailInfo) => {
           console.log("mail send !", mailInfo);
@@ -125,7 +141,10 @@ const Registration = () => {
             progress: undefined,
             theme: "colored",
             transition: Bounce,
+
           });
+
+          Navigate('/signin');
 
          
         })

@@ -7,6 +7,9 @@ import { GoGear } from "react-icons/go";
 import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+
+import { getAuth, signOut } from "firebase/auth";
+
 const Home_Components = () => {
   const navigationIcon = [
     {
@@ -113,6 +116,33 @@ const handleUploadIcon = () => {
 
  console.log(window.cloudinary)
 
+
+ //todo: handlelogOut function
+
+const handlelogOut=()=>{
+   //alert("hi!")
+
+   const auth = getAuth();
+
+   signOut(auth).then((result)=>{
+
+    console.log("Result: ",result);
+
+    navigate('/signin');
+
+
+   }).catch((error)=>{
+
+    console.log(`Error from sign out function :${error}`)
+
+   })
+
+ }
+
+//  console.log(auth.currentUser)
+
+
+
   return (
     <div>
       <div className="w-[130px] h-[92dvh] bg-secondary_color mt-7 mb-7 ml-7 rounded-2xl">
@@ -140,13 +170,13 @@ const handleUploadIcon = () => {
           <div className="flex flex-col gap-y-12">
             {navigationIcon?.map((item, index) =>
               navigationIcon.length - 1 == index ? (
-                <Link
-                to={item.path}
+                <div
+                onClick={handlelogOut}
                 className="text-white text-[40px] mt-13 cursor-pointer"
                 key={item.id}
               >
                 <div className="" onClick={handleSideItem } >{item.icon}</div>
-              </Link>
+              </div>
               ) : (
                 <div
                   className="flex flex-col gap-y-12 "

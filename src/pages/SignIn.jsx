@@ -6,14 +6,23 @@ import { useState } from "react";
 import SignInChatAnimation from "../assets/SignInLottieAnimation.json";
 import Button from "../components/common_component/Button";
 import { FcGoogle } from "react-icons/fc";
-import { getAuth, signInWithEmailAndPassword,signInWithPopup, GoogleAuthProvider} from "firebase/auth";
-import {successToast} from '../Toastify'
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { successToast } from "../Toastify";
 
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set ,push } from "firebase/database";
+
+import { useNavigate } from "react-router";
 
 const SignIn = () => {
   const auth = getAuth();
-  const database = getDatabase();
+  const db = getDatabase();
+
+  const Navigate = useNavigate();
 
   const [loginInfo, setloginInfo] = useState({
     email: "",
@@ -72,10 +81,11 @@ console.log(newobj);
       const { email, password } = loginInfo;
       signInWithEmailAndPassword(auth, email, password)
         .then((userinfo) => {
-          console.log("login successfull!",userinfo);
+          console.log("login successfull!", userinfo);
 
-          successToast("login successfull!");//todo: react toastify
-      
+          Navigate("/home");
+
+          successToast("login successfull!"); //todo: react toastify
         })
         .catch((error) => {
           console.log(`error is:${error}`);
@@ -83,34 +93,41 @@ console.log(newobj);
     }
   };
 
+  // todo:login with google button functionality
 
-// todo:login with google button functionality
+  /**
+   * todo:crud
+   * !read and write data
+   */
 
-/**
- * todo:crud
- * !read and write data 
- */
+  const loginWithGoogle = () => {
+    // alert("hi"); //todo:button working check
 
-const loginWithGoogle=()=>{
-      // alert("hi"); //todo:button working check
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((userinfo) => {
+        console.log("login with google successfull", userinfo);
 
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider).then((userinfo)=>{
-        console.log("login with google successfull",userinfo)
+        console.log(userinfo)
+        const {user}=userinfo
 
         //store userdata in firebase realtime database
-        set(ref(database, "users" ), {
-          username: "mern",
-          email: "email@gmail.com",
-          profile_picture : "imageUrl"
-        });
-      
-      }).catch((error)=>{
-        console.log(`error is : ${error}`)
+        let userRef =push(ref(db, 'users/'))
+        set(userRef, {
+          username: user.displayName || "Name Missing",// if saving problem occurs then it will show name missing 
+          email: user.email || "Email missing",//if saving problem occurs then it will show email missing
+          profile_picture: user.photoURL,
+          userUid: user.uid,
+        })
+
+        
+      }).then(()=>{
+        Navigate('/home')
       })
-
-}
-
+      .catch((error) => {
+        console.log(`error is : ${error}`);
+      });
+  };
 
   return (
     <div className="flex">
@@ -120,17 +137,19 @@ const loginWithGoogle=()=>{
         </p>
 
         <div
-          className="px-8 py-2  border-2 border-gray-400  mb-4 rounded-lg cursor-pointer flex gap-2" 
+          className="px-8 py-2  border-2 border-gray-400  mb-4 rounded-lg cursor-pointer flex gap-2"
           onClick={loginWithGoogle}
         >
-          
-          <FcGoogle className="w-[50px] h-[50px]"/>
+          <FcGoogle className="w-[50px] h-[50px]" />
 
-          <span className="font-semibold text-[16.4px] font-roboto_font mt-4 ">Login with Google</span>
+          <span className="font-semibold text-[16.4px] font-roboto_font mt-4 ">
+            Login with Google
+          </span>
+        </div>
 
-          </div>
-
-        <label className="font-roboto_font text-[20px] mt-4">Enter email address</label>
+        <label className="font-roboto_font text-[20px] mt-4">
+          Enter email address
+        </label>
         <input
           type="email"
           id="email"
@@ -144,7 +163,9 @@ const loginWithGoogle=()=>{
             {""}
           </span>
         )}
-        <label className="font-roboto_font mt-4 text-[20px]">Enter your password</label>
+        <label className="font-roboto_font mt-4 text-[20px]">
+          Enter your password
+        </label>
         <input
           type="password"
           id="password"
