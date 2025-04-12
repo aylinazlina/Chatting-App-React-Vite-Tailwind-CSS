@@ -3,14 +3,13 @@ import { HiDotsVertical } from "react-icons/hi";
 import Button from "../common_component/Button";
 import { FaPlus } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-import UserSkeleton from './skeleton/UserSkeleton'
+import UserSkeleton from "./skeleton/UserSkeleton";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
-
 const UserList = () => {
   const db = getDatabase();
-  const auth= getAuth();
+  const auth = getAuth();
   const [loading, setLoading] = useState(true);
   const [userlist, setUserlist] = useState([]); // Changed to empty array
 
@@ -55,12 +54,10 @@ const UserList = () => {
   if (loading) {
     return <UserSkeleton />;
   }
-
-  console.log(auth.currentUser)
+  console.log(auth.currentUser);
 
   console.log("====================");
   console.log(userlist);
-
 
   const groups = [
     {
@@ -147,7 +144,7 @@ const UserList = () => {
 
   return (
     <div>
-       <div className="w-[25dvw] h-[43dvh] rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
+      <div className="w-[25dvw] h-[43dvh] rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
         <div className="flex py-2">
           <p className="ml-6 mt-4 font-roboto_font font-bold text-[18px]">
             User List({userlist.length})
