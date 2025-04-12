@@ -8,15 +8,13 @@ import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 
 import { getAuth, signOut } from "firebase/auth";
 
 const Home_Components = () => {
-
   const auth = getAuth();
   const db = getDatabase();
-
 
   const navigationIcon = [
     {
@@ -49,8 +47,6 @@ const Home_Components = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-
 
   // console.log(location)
   //console.log(location.pathname)
@@ -102,7 +98,7 @@ const Home_Components = () => {
             "google_drive",
             "image_search",
           ],
-          googleApiKey: "AIzaSyBEs8X_6kR9W6wi__K3E9MA6Y0v4CGbS9Y", // ← use googleApiKey, not `Key`
+          googleApiKey: "AIzaSyBEs8X_6kR9W6wi__K3E9MA6Y0v4CGbS9Y",
           searchBySites: ["all", "cloudinary.com"],
           searchByRights: true,
         },
@@ -111,7 +107,14 @@ const Home_Components = () => {
             console.error("Upload Error:", error);
             return;
           }
-          console.log("Upload Result:", result);
+          if (result && result.event === "success") {
+            console.log("Uploaded Image URL:", result.info.secure_url); // ← Log the secure URL here
+
+            //profile pic update
+            update(ref(db,`users/${userdata.userKey}`),{
+              profile_picture:result?.info?.secure_url
+            });
+          }
         }
       );
     } else {
@@ -162,8 +165,8 @@ const Home_Components = () => {
     fetchData();
   }, []);
 
-  console.log("====================")
-  console.log(userdata)
+  console.log("====================");
+  console.log(userdata);
 
   return (
     <div>
@@ -172,7 +175,11 @@ const Home_Components = () => {
           <div className="w-[80px] h-[80px] mt-7 mb-10 rounded-[50%] cursor-pointer relative group">
             <picture>
               <img
-                src={userdata ? userdata.profile_picture :"https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+                src={
+                  userdata
+                    ? userdata.profile_picture
+                    : "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                }
                 alt="image"
                 className="object-cover w-full h-full rounded-full"
               />
@@ -184,7 +191,9 @@ const Home_Components = () => {
               <IoCloudUploadOutline />
             </span>
 
-            <p className="font-roboto_font text-white text-[18px] ml-3">{userdata? userdata.username:"missing"}</p>
+            <p className="font-roboto_font text-white text-[18px] ml-3">
+              {userdata ? userdata.username : "missing"}
+            </p>
 
             {/* <span>{count}</span>
             <button onClick={handleIncreament} className="bg-red-400">+</button> */}

@@ -7,15 +7,17 @@ import UserSkeleton from './skeleton/UserSkeleton'
 import { getDatabase, ref, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
+
 const UserList = () => {
   const db = getDatabase();
+  const auth= getAuth();
   const [loading, setLoading] = useState(true);
   const [userlist, setUserlist] = useState([]); // Changed to empty array
 
   useEffect(() => {
     const auth = getAuth();
     const fetchData = () => {
-      const UserRef = ref(db, "users/");
+      const UserRef = ref(db, "users/");//database network establish
       onValue(UserRef, (snapshot) => {
         const users = [];
         snapshot.forEach((item) => {
@@ -37,11 +39,24 @@ const UserList = () => {
       });
     };
     fetchData();
+
+    //todo: clean up function => server cost komanor jonno(ekta jsx onno jsx er sath kono karone connect thakle amra onno page e thakleo network rquest pathai tokhon sever cost bere jai)
+
+    return ()=>{
+
+      const UserRef = ref(db, "users/"); 
+
+      // off(UserRef)
+    }
+
+
   }, [db]);
 
   if (loading) {
     return <UserSkeleton />;
   }
+
+  console.log(auth.currentUser)
 
   console.log("====================");
   console.log(userlist);
@@ -150,7 +165,7 @@ const UserList = () => {
                   ? `flex justify-around pb-12 mt-2 cursor-pointer`
                   : `flex justify-around border-b-2 border-gray-300 pb-2 mt-2 cursor-pointer`
               }
-              key={item.id}
+              key={item.userUid}
             >
               <div className="w-[50px] h-[50px] rounded-full">
                 <picture>

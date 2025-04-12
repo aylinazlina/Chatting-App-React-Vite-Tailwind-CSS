@@ -4,9 +4,9 @@ import { HiDotsVertical } from "react-icons/hi";
 const Searchbar = () => {
   return (
     <div>
-      <form class="flex items-center max-w-lg mx-auto">
-        <div class="relative w-full">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+      <form className="flex items-center max-w-lg mx-auto">
+        <div className="relative w-full">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <span className="font-roboto_font font-bold text-gray-500">
               <FaSearch />
             </span>
@@ -18,7 +18,7 @@ const Searchbar = () => {
           />
           <div
            
-            class="absolute inset-y-0 end-0 flex items-center pe-3"
+            className="absolute inset-y-0 end-0 flex items-center pe-3"
           >
             <span className="absolute inset-y-0 end-0 flex items-center pe-3 font-roboto_font font-bold text-[22px]  text-secondary_color cursor-pointer">
               <HiDotsVertical />
