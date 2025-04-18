@@ -4,7 +4,7 @@ import Button from "../common_component/Button";
 import { FaPlus } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import UserSkeleton from "./skeleton/UserSkeleton";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, set, push, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const UserList = () => {
@@ -12,43 +12,73 @@ const UserList = () => {
   const auth = getAuth();
   const [loading, setLoading] = useState(true);
   const [userlist, setUserlist] = useState([]); // Changed to empty array
+  const [loggeduser, setLoggedUser] = useState([]);
 
   useEffect(() => {
     const auth = getAuth();
     const fetchData = () => {
-      const UserRef = ref(db, "users/");//database network establish
-      onValue(UserRef, (snapshot) => {
-        const users = [];
-        snapshot.forEach((item) => {
-          // Skip the current user and only include others
-          if (item.val().userUid !== auth.currentUser?.uid) {
-            users.push({
-              id: item.key,
-              username: item.val().username || item.val().displayName || "User",
-              profile_picture: item.val().photoURL || item.val().profile_picture || "https://via.placeholder.com/150",
-              time: "Recently active" // Default value, replace with actual last active time if available
-            });
-          }
-        });
-        setUserlist(users);
-        setLoading(false);
-      }, (error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
+      const UserRef = ref(db, "users/"); //database network establish
+      onValue(
+        UserRef,
+        (snapshot) => {
+          const users = [];
+          snapshot.forEach((item) => {
+            // Skip the current user and only include others
+            if (item.val().userUid !== auth.currentUser?.uid) {
+              users.push({
+                id: item.key,
+                username:
+                  item.val().username || item.val().displayName || "User",
+                profile_picture:
+                  item.val().photoURL ||
+                  item.val().profile_picture ||
+                  "https://via.placeholder.com/150",
+                email: item.val().email || "", // ✅ Add this
+                userKey: item.key, // ✅ Add this
+
+                time: "Recently active", // Default value, replace with actual last active time if available
+              });
+            } else {
+              //  let user =Object.assign({
+              //   id: item.key,
+              //   username: item.val().username || item.val().displayName || "User",
+              //   profile_picture: item.val().photoURL || item.val().profile_picture || "https://via.placeholder.com/150",
+              //   time: "Recently active" // Default value, replace with actual last active time if available
+              //  },
+
+              let user = {
+                id: item.key,
+                username:
+                  item.val().username || item.val().displayName || "User",
+                profile_picture:
+                  item.val().photoURL ||
+                  item.val().profile_picture ||
+                  "https://via.placeholder.com/150",
+                email: item.val().email || "",
+                userKey: item.key,
+                time: "Recently active",
+              };
+              setLoggedUser(user);
+            }
+          });
+          setUserlist(users);
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching data:", error);
+          setLoading(false);
+        }
+      );
     };
     fetchData();
 
     //todo: clean up function => server cost komanor jonno(ekta jsx onno jsx er sath kono karone connect thakle amra onno page e thakleo network rquest pathai tokhon sever cost bere jai)
 
-    return ()=>{
-
-      const UserRef = ref(db, "users/"); 
+    return () => {
+      const UserRef = ref(db, "users/");
 
       // off(UserRef)
-    }
-
-
+    };
   }, [db]);
 
   if (loading) {
@@ -142,6 +172,29 @@ const UserList = () => {
     },
   ];
 
+  console.log("hello", loggeduser);
+
+  // todo:handlePlusButton function,param =>item
+
+  const handlePlusButton = (item = {}) => {
+    console.log("hi", item);
+    set(push(ref(db, "friendRequest/")), {
+      // sendfriendRequest: "lizubev",
+      // receivedFriendRequest: "rujynahok",
+      senderId: loggeduser.id,
+      senderEmail: loggeduser.email,
+      senderProfile_pic: loggeduser.profile_picture,
+      senderUserKey: loggeduser.userKey,
+      senderUserName: loggeduser.username,
+
+      receiverId: item.id,
+      receiverEmail: item.email,
+      receiverProfile_pic: item.profile_picture,
+      receiverUserKey: item.userKey,
+      receiverUserName: item.username,
+    });
+  };
+
   return (
     <div>
       <div className="w-[25dvw] h-[43dvh] rounded-xl border-2 border-gray-200 shadow-xl overflow-hidden">
@@ -184,6 +237,7 @@ const UserList = () => {
               <Button
                 design="px-4 py-1 bg-secondary_color text-white font-bold text-[22px] font-roboto_font rounded-md cursor-pointer"
                 content={<FaPlus />}
+                onClick={() => handlePlusButton(item)}
               />
             </div>
           ))}
