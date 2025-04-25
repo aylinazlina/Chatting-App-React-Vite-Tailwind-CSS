@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Home from "./pages/Home";
 import RootLayout from "./rootlayout/RootLayout";
 import Chat from './pages/Chat';
+import Settings from './pages/Settings'
 const App = () => {
   return (
     <BrowserRouter>
@@ -17,7 +18,7 @@ const App = () => {
           <Route path="/home" element={<Home />}></Route>
           <Route path="/message" element={<Chat/>}></Route>
           <Route path="/notification" element ={"This is from notification page"}></Route>
-          <Route path="/settings" element={"This is from settings page"}></Route>
+          <Route path="/settings" element={<Settings/>}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,9 +1,9 @@
 import { toast,Bounce } from "react-toastify";
 
-export  const successToast = ((msg ="success toast is missing")=>{
+export  const successToast = ((msg ="success toast is missing", position ="top-right")=>{
 
     toast.success(msg, {
-        position: "top-right",
+        position: position,
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
@@ -15,3 +15,7 @@ export  const successToast = ((msg ="success toast is missing")=>{
         });
 
 })
+
+
+
+

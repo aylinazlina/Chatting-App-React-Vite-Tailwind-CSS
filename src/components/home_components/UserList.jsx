@@ -1,11 +1,15 @@
 import React from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import Button from "../common_component/Button";
-import { FaPlus } from "react-icons/fa6";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import UserSkeleton from "./skeleton/UserSkeleton";
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import {successToast} from '../../Toastify.js'
+import moment from 'moment/moment';
+import {getTimeNow}  from "../../lib/lib.js";
+
 
 const UserList = () => {
   const db = getDatabase();
@@ -13,6 +17,8 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
   const [userlist, setUserlist] = useState([]); // Changed to empty array
   const [loggeduser, setLoggedUser] = useState([]);
+
+ 
 
   useEffect(() => {
     const auth = getAuth();
@@ -80,6 +86,10 @@ const UserList = () => {
       // off(UserRef)
     };
   }, [db]);
+
+
+ 
+
 
   if (loading) {
     return <UserSkeleton />;
@@ -173,15 +183,29 @@ const UserList = () => {
   ];
 
   console.log("hello", loggeduser);
+  console.log(moment().format("dd, MM DD YYYY, h:mm a"));
 
   // todo:handlePlusButton function,param =>item
 
   const handlePlusButton = (item = {}) => {
+   /* let userinfo ={
+      name :"mern",
+      id:123,
+    }
+    // localStorage.setItem('Information',JSON.stringify(userinfo))
+
+   const jsonData= JSON.stringify(userinfo)
+  // console.log(jsonData);
+    const userInfobj=JSON.parse(jsonData)
+    console.log(userInfobj);
+
+    return */
+
     console.log("hi", item);
     set(push(ref(db, "friendRequest/")), {
       // sendfriendRequest: "lizubev",
       // receivedFriendRequest: "rujynahok",
-      senderId: loggeduser.id,
+      senderId: loggeduser.id || auth.currentUser.uid,
       senderEmail: loggeduser.email,
       senderProfile_pic: loggeduser.profile_picture,
       senderUserKey: loggeduser.userKey,
@@ -192,8 +216,36 @@ const UserList = () => {
       receiverProfile_pic: item.profile_picture,
       receiverUserKey: item.userKey,
       receiverUserName: item.username,
-    });
+
+      // createdAt:moment().format("dd, MM DD YYYY, h:mm a"),
+
+      createdAt:getTimeNow(),
+
+    }).then(() => {
+      set(push(ref(db, "notification/")), {
+        notificationMsgSent: `${loggeduser.username} send a friend request`,
+        senderProfile_pic: loggeduser.profile_picture,
+        createdAt:getTimeNow(),
+      });
+    }).then(()=>{
+      successToast(`${loggeduser.username} send a friend request`,"top-center")
+    }).then(()=>{
+
+        let userInfo ={
+          FRId:loggeduser.id +item.id
+        
+       }
+
+       //now store the data in LocalStorage
+       localStorage.setItem('SenderReceiverId',JSON.stringify(userInfo))
+       
+    })
   };
+
+  //get SenderReceiverId from localStorage
+ const SenderReceiverId =localStorage.getItem('SenderReceiverId')
+ const SenderReceiverIdObj=JSON.parse(SenderReceiverId)
+ console.log(SenderReceiverIdObj.FRId)
 
   return (
     <div>
@@ -234,11 +286,16 @@ const UserList = () => {
                   {item.time}
                 </p>
               </div>
-              <Button
+              {SenderReceiverIdObj?.FRId ==loggeduser.id +item.id ? (<Button
+                design="px-4 py-1 bg-secondary_color text-white font-bold text-[22px] font-roboto_font rounded-md cursor-pointer"
+                content={<FaMinus />}
+               
+              />):(<Button
                 design="px-4 py-1 bg-secondary_color text-white font-bold text-[22px] font-roboto_font rounded-md cursor-pointer"
                 content={<FaPlus />}
                 onClick={() => handlePlusButton(item)}
-              />
+              />)}
+              
             </div>
           ))}
         </div>
